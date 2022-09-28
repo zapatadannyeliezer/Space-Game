@@ -9,21 +9,23 @@ body { margin:10px; background-image: url("../images/wall.jpg"); }
   background-color:#000000;
   color: #ffffff;
   font-size: 20px;
-  height: 20px; width: 700px;
+  height: 30px; width: 700px;
 }
 #my_canvas{ 
   background:#000000; 
   border:#000 1px solid; 
 }
 .boton{
-    color:red;
-    font-size: 40px;
+    color:magenta;
+    font-size: 22px;
+    font-family:Verdana;
     background-color: #000000;
     cursor: pointer;
     border-radius: 8px;
-    border:2px solid blue;
+    border:2px solid gray;
+    align-items: center;
 }
 .boton:hover{
-    background-color: white;
+    background-color: purple;
     color: #000000;
 }

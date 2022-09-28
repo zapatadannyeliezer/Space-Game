@@ -1,20 +1,22 @@
 function initCanvas(){
     let ctx = document.getElementById('my_canvas').getContext('2d');
+    let laser = document.getElementById('laser');
+    //let explosion = document.getElementById('explosion');
     let backgroundImage = new Image();
-    let naveImage       = new Image(); // nave
-    let enemiespic1     = new Image(); // enemigo 1
-    let enemiespic2     = new Image(); // enemigo 2
+    let naveImage       = new Image(); 
+    let enemiespic1     = new Image(); 
+    let enemiespic2     = new Image(); 
 
     // backgroundImage y naveImage
-    backgroundImage.src = "images/background-pic.jpg"; //Background picture
-    naveImage.src       = "images/spaceship-pic.png"; //Spaceship picture
+    backgroundImage.src = "images/background-pic.jpg"; 
+    naveImage.src       = "images/spaceship-elonm.png"; 
     // Enemigos fotos
-    enemiespic1.src     = "images/enemigo1.png";
-    enemiespic2.src     = "images/enemigo2.png"; //Enemies picture
+    enemiespic1.src     = "images/enemigo2.png";
+    enemiespic2.src     = "images/enemigo3.png"; 
     
     // width and height (canvas)
-    let cW = ctx.canvas.width; // 700px 
-    let cH = ctx.canvas.height;// 600px
+    let cW = ctx.canvas.width;   
+    let cH = ctx.canvas.height; 
 
     // template for naves
     let enemyTemplate = function(options){
@@ -51,42 +53,51 @@ function initCanvas(){
         new enemyTemplate({ id: "enemy18", x: 600, y: -270, w: 80, h: 50, image: enemiespic2 }),
         new enemyTemplate({ id: "enemy19", x: 475, y: -200, w: 50, h: 30, image: enemiespic2 }),
         new enemyTemplate({ id: "enemy20", x: 600, y: -200, w: 50, h: 30, image: enemiespic2 })
-    ];
+    ]; 
+
+
+    //ctx.drawImage(enemyList[i].image, enemyList[i].x, enemyList[i].y += .5, enemyList[i].w, enemyList[i].h);
 
     let renderEnemies = function(enemyList){
-
+        
         for(let i = 0; i < enemyList.length; i++){
             let enemy = enemyList[i];
-            ctx.drawImage(enemy.image, enemy.x, enemy.y += .5, enemy.w, enemy.h);
+            ctx.drawImage(enemyList[i].image, enemyList[i].x, enemyList[i].y += .5, enemyList[i].w, enemyList[i].h);
             launcher.hitDetectLowerlevel(enemy);
+           /*  explosion.play();
+            setTimeout(() => {
+                laser.pause();
+                //laser.load();
+                
+            }, 100);   */
         }
     }
 
      function Launcher(){
         this.y = 500, 
-        this.x = cW*.5-25, 
+        this.x = cW* .5 - 25, 
         this.w = 100, 
         this.h = 100,   
         this.direccion, 
-        this.bg="white", 
+        this.bg = "white", 
         this.misiles = [];
 
         this.gameStatus = {
             over: false,
             message: "",
-            fillStyle: 'red',
+            fillStyle: 'magenta',
             font: 'italic bold 36px Arial, sans-serif',
         }
 
-        this.render = function(){
+        this.render = function() {
             if(this.direccion === 'left'){
-                this.x -= 5;
-            }else if(this.direccion === 'right'){
-                this.x += 5;
-            }else if(this.direccion === 'downArrow'){
-                this.y += 5;
-            }else if(this.direccion === 'upArrow'){
-                this.y -= 5;
+                this.x-=5;
+            } else if(this.direccion === 'right'){
+                this.x+=5;
+            }else if(this.direccion === "downArrow"){
+                this.y+=5;
+            }else if(this.direccion === "upArrow"){
+                this.y-=5;
             }
 
             ctx.fillStyle = this.bg;
@@ -104,9 +115,9 @@ function initCanvas(){
 
             if(enemies.length === 0){
                 clearInterval(animateIntervale);
-                ctx.fillStyle = 'yellow';
+                ctx.fillStyle = 'magenta';
                 ctx.font = this.gameStatus.font;
-                ctx.fillText('You win!', cW *.5 - 80, 50);
+                ctx.fillText('Lets go to Mars!', cW *.5 - 80, 50);
             }
         }
 
@@ -131,7 +142,7 @@ function initCanvas(){
             if((enemy.y < this.y + 25 && enemy.y > this.y - 25) &&
                (enemy.x < this.x + 45 && enemy.x > this.x - 45)){    
                 this.gameStatus.over = true;
-                this.gameStatus.message = 'You Died!';
+                this.gameStatus.message = 'You have died Elon';
             }
 
             if(this.gameStatus.over === true){
@@ -154,129 +165,142 @@ function initCanvas(){
 
     let animateIntervale = setInterval(animate, 6);
 
-    let left_btn  = document.getElementById('left_btn');
+   /*  let left_btn  = document.getElementById('left_btn');
     let right_btn = document.getElementById('right_btn');
     let fire_btn  = document.getElementById('fire_btn');
+ */
+    //Aqui se crean las direccionales
 
-    //Aqui se crean ls direccionales
-
-    document.addEventListener('keydown', function(event){
-        if(event.keyCode === 37){
-            launcher.direccion = 'left';
-            if(launcher.x < cW*.2 -130){
-                launcher.x += 0;
+    document.addEventListener('keydown', function(event) {
+        if(event.keyCode == 37){
+         launcher.direccion = 'left';  
+            if(launcher.x < cW*.2-130){
+                launcher.x+=0;
                 launcher.direccion = '';
             }
+       }    
+    });
+
+    document.addEventListener('keyup', function(event) {
+        if(event.keyCode == 37){
+         launcher.x+=0;
+         launcher.direccion = '';
         }
     });
 
-    document.addEventListener('keyup', function(event){
-        if(event.keyCode === 37){
-            launcher.x += 0;
+    document.addEventListener('keydown', function(event) {
+        if(event.keyCode == 39){
+         launcher.direccion = 'right';
+         if(launcher.x > cW-110){
+            launcher.x-=0;
             launcher.direccion = '';
+         }
+        
+        }
+    });
+
+    document.addEventListener('keyup', function(event) {
+        if(event.keyCode == 39){
+         launcher.x-=0;   
+         launcher.direccion = '';
         }
     });
 
     document.addEventListener('keydown', function(event){
-        if(event.keyCode === 39){
-            launcher.direccion = 'right';
-            if(launcher.x > cW - 110){
-                launcher.x -= 0;
-                launcher.direccion - '';
-            }
-        }
-    });
-
-    document.addEventListener('keyup', function(event){
-        if(event.keyCode === 39){
-            launcher.x -= 0;
-            launcher.direccion = '';
-        }
-    });
-
-    document.addEventListener('keydown', function(event){
-        if(event.keyCode === 38){
-           launcher.direccion = 'upArrow';
-           if(launcher.y < cH*.2 - 80){
-            launcher.y += 0;
-            launcher.direccion = '';
+        if(event.keyCode == 38){
+          launcher.direccion = 'upArrow';  
+          if(launcher.y < cH*.2-80){
+             launcher.y += 0;
+             launcher.direccion = '';
            }
         }
-    });
+   });
 
     //Apartir de aqui abilitamos las direccionales
 
     document.addEventListener('keyup', function(event){
-        if(event.keyCode === 38){
-            launcher.y -= 0;
-            launcher.direccion = '';
+        if(event.keyCode == 38){
+          launcher.y -= 0;
+          launcher.direccion = '';
         }
-    });
+   });
 
-    document.addEventListener('keydown', function(event){
-        if(event.keyCode === 40){
-           launcher.direccion = 'downArrow';
-           if(launcher.y > cH - 110){
-            launcher.y -= 0;
-            launcher.direccion = '';
-           }
-          
-        }
-    });
+   document.addEventListener('keydown', function(event){
+    if(event.keyCode == 40){
+      launcher.direccion = 'downArrow';  
+     if(launcher.y > cH - 110){
+       launcher.y -= 0;
+       launcher.direccion = '';
+      }
+    }
+});
 
-    document.addEventListener('keyup', function(event){
-        if(event.keyCode === 40){
-            launcher.y += 0;
-            launcher.direccion = '';
-        }
-    });
+document.addEventListener('keyup', function(event){
+    if(event.keyCode == 40){
+      launcher.y += 0;
+      launcher.direccion = '';
+    }
+});
 
-    document.addEventListener('keydown', function(event){
-        if(event.keyCode === 80){
-           location.reload();         
-        }
-    });
+document.addEventListener('keydown', function(event){
+    if(event.keyCode == 80){
+     location.reload();
+    }
+});
 
-    //Aui se abilita el mouse para disparar y moverse
+    //Aqui se abilita el mouse para disparar y moverse
 
-    left_btn.addEventListener('mousedown', function(event){
+   /*  left_btn.addEventListener('mousedown', function(event) {
         launcher.direccion = 'left';
     });
 
-    left_btn.addEventListener('mouseup', function(event){
+    left_btn.addEventListener('mouseup', function(event) {
         launcher.direccion = '';
     });
 
-    right_btn.addEventListener('mousedown', function(event){
+    right_btn.addEventListener('mousedown', function(event) {
         launcher.direccion = 'right';
     });
 
-    right_btn.addEventListener('mouseup', function(event){
+    right_btn.addEventListener('mouseup', function(event) {
         launcher.direccion = '';
     });
 
-    fire_btn.addEventListener('mousedown', function(event){
+    fire_btn.addEventListener('mousedown', function(event) {
+        setTimeout(() => {
+            laser.pause();
+            laser.load();
+            
+        }, 500);
         launcher.misiles.push({
-            x: launcher.x + launcher.w *.5,
-            y: launcher.y,
-            w: 3,
-            h: 10
-        });
-    });
+            x: launcher.x + launcher.w*.5, 
+            y: launcher.y, 
+            w: 3, 
+            h: 10});
+    }); */
 
-    document.addEventListener('keydown', function(event){
-        if(event.keyCode === 32){
-            launcher.misiles.push({
-                x: launcher.x + launcher.w *.5,
-                y: launcher.y,
-                w: 3,
-                h: 10
-            });
+    document.addEventListener('keypress', function(event) {
+        console.log('keydown');
+        laser.play()
+        if(event.keyCode == 32) {
+           launcher.misiles.push({
+            x: launcher.x + launcher.w*.5, 
+            y: launcher.y, 
+            w: 3,
+            h: 10,
+           
+        });
         }
+
+        setTimeout(() => {
+            laser.pause();
+            laser.load();
+            
+        }, 500);
     });
 
 }
 
 window.addEventListener('load', function(event) {
     initCanvas();
-});
+});   
